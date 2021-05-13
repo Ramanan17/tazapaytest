@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300&display=swap" rel="stylesheet">
+    <style>
+        .box{
+            width:40px;
+            height:40px;
+            border-radius: 5px;
+            
+
+        }
+        @media screen and (max-width: 600px) {
+            .layout{
+            display:grid;
+            padding:20px;
+            width:100%;
+            grid-template-columns: 40px 40px 48px 40px 40px 40px;
+            grid-row-gap: 5px;
+            }
+            .book_div{
+            display:block
+        }
+        }
+         
+
+
+        .result{
+            width:200px;
+            height:150px;
+            background-color: aliceblue;
+        }
+        @media screen and  (min-width: 600px){
+            .book_div{
+            display:flex;justify-content:flex-start;
+        }
+        .layout{
+            display:grid;
+            width:30%;
+            grid-template-columns: 40px 40px 48px 40px 40px 40px;
+            grid-row-gap: 5px;
+        }
+
+        } 
+
+    </style>
+
+
+</head>
+<body>
+    <div id="app">
+     <div class="book_div"> 
+        <div class="layout">
+            <button_click v-for = "color in randomColor" :key='color.id' :color="color.color" v-on:booked="set_price_availability" >
+
+            </button_click>
+
+        </div>
+        <div class="result">
+            <span style="font-family: 'Roboto', sans-serif; font-weight: bold;">Type: {{type}}</span>
+            <br/>
+            <br/>
+            <span style="font-family: 'Roboto', sans-serif; font-weight: bold;">Price: {{price}} </span>
+        </div>
+     </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+    <script>
+        var compoennt =Vue.component('button_click',{
+            props:['color'],
+            data: function(){
+            return{
+               classStyle:{
+                   'backgroundColor':this.color,
+               }
+            }
+            },
+            methods:{
+                clicked(){
+                    this.$emit('booked',this.color)
+                }
+            },
+            template: '<button class = "box"  v-bind:style = "classStyle" @click="clicked"  ></button>'
+        })
+        var vm = new Vue({
+            el:'#app',
+            data:{
+                bg_colors:['#003399','#CCCCCC','#0099FF'],
+                price:'',
+                type:'Click an seat to get price and availability'
+            },
+            methods:{
+                getrandomColors(){
+                    result_colors = [];
+                    for(var i=0;i<36;i++)
+                    {
+                        randomColor = this.bg_colors[Math.floor(Math.random()*this.bg_colors.length)]
+                        result_colors.push({id:i,color:randomColor});
+                    }
+                    return result_colors;
+                },
+                set_price_availability(value){
+                    if(value == this.bg_colors[1]){
+                        this.price = 0;
+                        this.type = "Booked";
+                    }
+                    else if(value == this.bg_colors[2]){
+                        this.price = "Rs 3000";
+                        this.type = "Economy";
+                    }
+                    else{
+                        this.type = 'Special Economy';
+                        this.price = "Rs 6000";
+                    }
+                }
+
+            },
+            computed:{
+                randomColor: function() {
+                    return this.getrandomColors();
+                }
+            }
+
+        });
+
+    </script>
+</body>
+</html>
